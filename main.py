@@ -135,6 +135,77 @@ if response.status_code == 200:
     df.to_csv("api_data.csv", index=False)
     print("API data saved to api_data.csv")
 
+# update the code to include error handling for the API call 
+# and file operations, ensuring that any exceptions are caught and logged appropriately.
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+try:
+    response = requests.get("https://jsonplaceholder.typicode.com/posts")
+    response.raise_for_status()  # Raise an error for HTTP errors
+    data = response.json()
+    df = pd.DataFrame(data)
+    df.to_csv("api_data.csv", index=False)
+    logging.info("API data saved to api_data.csv")
+except requests.RequestException as e:
+    logging.error(f"Error fetching API data: {e}")
+except Exception as e:
+    logging.error(f"Unexpected error occurred: {e}")
+
+# combine the API call and file operations into a single code 
+# that handles errors gracefully and logs them appropriately.
+
+import requests
+import pandas as pd
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+try:
+    response = requests.get("https://jsonplaceholder.typicode.com/posts")
+    response.raise_for_status()  # Raise an error for HTTP errors
+    data = response.json()
+    df = pd.DataFrame(data)
+    df.to_csv("api_data.csv", index=False)
+    logging.info("API data saved to api_data.csv")
+except requests.RequestException as e:
+    logging.error(f"Error fetching API data: {e}")
+except Exception as e:
+    logging.error(f"Unexpected error occurred: {e}")
+
+#Add Live Timestamps to the Script
+import requests
+import pandas as pd
+import logging
+from datetime import datetime
+
+#Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+try:
+    logging.info("Starting API data extraction pipeline...")
+    response = requests.get("https://jsonplaceholder.typicode.com/posts", timeout=20)
+    response.raise_for_status()
+    
+    # Process the verified connection data
+    data = response.json()
+    df = pd.DataFrame(data)
+    
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    output_filename = f"api_data_{current_date}.csv"
+    
+    df.to_csv(output_filename, index=False)
+    logging.info(f"API data successfully saved to {output_filename}")
+
+except requests.RequestException as e:
+    logging.error(f"Database/API pipeline transport layer failure: {e}")
+except Exception as e:
+    logging.error(f"Unexpected operational data failure: {e}")
+
+
+
 
 
 
