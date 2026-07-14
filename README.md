@@ -1,42 +1,24 @@
-# Data Engineering Bootcamp - API Extraction Pipeline
+﻿# Data Engineering Bootcamp Portfolio
 
-A robust, isolated Python ETL pipeline that extracts structured post payloads from a REST API, parses the data into structured Pandas DataFrames, and preserves archival states using dynamic temporal file naming schemas.
+Welcome to my comprehensive Data Engineering learning and project repository. This space tracks my end-to-end journey from core scripting fundamentals to building enterprise-ready analytical pipelines.
 
-## Features
-- **Environment Isolation:** Complete structural containment using local Python virtual environments (`.venv`).
-- **Resilient Network Layer:** Configured transport tier error catching (`requests.RequestException`) with connection drop and timeout monitoring.
-- **Dynamic File Archiving:** Generates timestamped data dumps (`api_data_YYYY-MM-DD.csv`) to retain analytical run history.
-- **Structured Operations Logging:** Integrates Python's native `logging` module to surface execution contexts over fragile standard print flags.
+## 🗺️ Curriculum Blueprint
 
-## Project Structure
-```text
-VMpy/
-├── .gitignore              # Protects repository from bloated .venv traces
-├── main.py                 # Core production extraction script
-├── requirements.txt        # Isolated environment dependency footprint
-└── api_data_YYYY-MM-DD.csv # Temporal target dataset output
-```
+Click on any module link below to explore the scripts, documentation, and data engineering implementations for that specific milestone:
 
-## Setup & Execution
+- [📁 docs/](./docs) - Structural system architecture notes, execution logs, and setup workflows.
+- [📁 week01-python/](./week01-python) - Python environment isolation, requests API extraction pipelines, and Pandas transformation vectors.
+- [📁 week02-sql/](./week02-sql) - Relational algebra, advanced query optimization, and structured analytical querying blueprints.
+- [📁 week03-postgresql/](./week03-postgresql) - Local database deployment, schema modeling, constraints, indexing, and transactional integrity.
+- [📁 week04-linux-git-docker/](./week04-linux-git-docker) - Shell automation scripting, advanced Git workflows, and containerized pipeline deployments.
+- [📁 week05-cloud/](./week05-cloud) - Distributed cloud storage structures, managed relational engines, and compute networking frameworks.
+- [📁 week06-pyspark/](./week06-pyspark) - Large-scale data transformations, distributed cluster execution, and lazy evaluation optimizations.
+- [📁 week07-airflow/](./week07-airflow) - Directed Acyclic Graph (DAG) generation, schedule monitoring, and pipeline workflow orchestration.
+- [📁 week08-capstone/](./week08-capstone) - Core end-to-end data pipeline processing raw sources into cloud data warehouses.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com
-   cd data-engineering-bootcamp/VMpy
-   ```
+---
 
-2. **Spin up your local container environment:**
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   ```
-
-3. **Install exact structural package variants:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Trigger pipeline execution:**
-   ```bash
-   python main.py
-   ```
+## 🛠️ Sandbox Folders
+- [📁 datasets/](./datasets) - Raw, processed, and staging target local analytical files.
+- [📁 projects/](./projects) - Independent multi-layered extraction and engineering modules.
+- [📁 portfolio/](./portfolio) - Final visualization assets and completed system summaries.
