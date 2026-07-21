@@ -1,24 +1,66 @@
-﻿# Data Engineering Bootcamp Portfolio
+﻿# Fintech Data Platform 🚀
 
-Welcome to my comprehensive Data Engineering learning and project repository. This space tracks my end-to-end journey from core scripting fundamentals to building enterprise-ready analytical pipelines.
+A production-grade, modular automated data extraction, processing, and analytical KPI reporting engine designed for high-noise financial data streams.
 
-## 🗺️ Curriculum Blueprint
+## 🏗 Repository Layout & Systems Architecture
 
-Click on any module link below to explore the scripts, documentation, and data engineering implementations for that specific milestone:
+This project is organized into decoupled functional layers, ensuring isolation of duties, configuration safety, and clear test boundaries:
 
-- [📁 docs/](./docs) - Structural system architecture notes, execution logs, and setup workflows.
-- [📁 week01-python/](./week01-python) - Python environment isolation, requests API extraction pipelines, and Pandas transformation vectors.
-- [📁 week02-sql/](./week02-sql) - Relational algebra, advanced query optimization, and structured analytical querying blueprints.
-- [📁 week03-postgresql/](./week03-postgresql) - Local database deployment, schema modeling, constraints, indexing, and transactional integrity.
-- [📁 week04-linux-git-docker/](./week04-linux-git-docker) - Shell automation scripting, advanced Git workflows, and containerized pipeline deployments.
-- [📁 week05-cloud/](./week05-cloud) - Distributed cloud storage structures, managed relational engines, and compute networking frameworks.
-- [📁 week06-pyspark/](./week06-pyspark) - Large-scale data transformations, distributed cluster execution, and lazy evaluation optimizations.
-- [📁 week07-airflow/](./week07-airflow) - Directed Acyclic Graph (DAG) generation, schedule monitoring, and pipeline workflow orchestration.
-- [📁 week08-capstone/](./week08-capstone) - Core end-to-end data pipeline processing raw sources into cloud data warehouses.
+```text
+fintech-data-platform/
+├── .env.example            # Blueprint configuration map for system paths
+├── pyproject.toml          # Modern structural configuration for pytest and builds
+├── requirements.txt        # Pinned production dependency matrix
+├── LICENSE                 # Project open-source license blueprint
+├── README.md               # Production architecture documentation manual
+├── data/                   # High-performance pipeline storage volumes
+│   ├── raw/                # Ingested high-noise transactional source feeds
+│   ├── processed/          # Schema-enforced, cleaned analytical records
+│   └── reports/            # Exported audit-ready business KPI reports
+├── docs/                   # Platform design strategies and system roadmaps
+│   ├── architecture.md
+│   └── roadmap.md
+├── sql/                    # Relational warehouse target layer
+│   ├── schema.sql          # Strict table definitions and constraints
+│   └── queries.sql         # High-velocity financial analytical queries
+├── src/                    # Processing Engine core modules
+│   ├── config.py           # Decoupled domain constraints and business rules
+│   ├── logger.py           # Centralized stream logger handler factory
+│   ├── main.py             # Global execution pipeline orchestrator
+│   ├── generator.py        # Synthetic ledger engine using modern NumPy RNG API
+│   ├── extractor.py        # Safe data ingestion vector with file error boundaries
+│   ├── transformer.py      # Numeric anomaly handler and currency filter
+│   ├── analyzer.py         # Advanced business metrics calculator engine
+│   └── loader.py           # Persistence write-out layer for data targets
+└── tests/                  # Automated pytest validation verification matrices
+```
 
----
+## ⚡ Quickstart Execution
 
-## 🛠️ Sandbox Folders
-- [📁 datasets/](./datasets) - Raw, processed, and staging target local analytical files.
-- [📁 projects/](./projects) - Independent multi-layered extraction and engineering modules.
-- [📁 portfolio/](./portfolio) - Final visualization assets and completed system summaries.
+### 1. Initialize Local Isolated Environment
+Ensure you are inside your local virtual environment context before installing your dependencies:
+```bash
+# Activate your environment (Windows PowerShell)
+.\.venv\Scripts\Activate.ps1
+
+# Clean install pinned application requirements
+pip install -r requirements.txt
+```
+
+### 2. Run the Processing Pipeline Engine
+Execute the global workflow end-to-end using the native python module entry point from the workspace root:
+```bash
+python -m src.main
+```
+
+### 3. Run Automated Validation Matrices
+Run the test suites locally to ensure zero schema parsing regression across your transformations:
+```bash
+python -m pytest
+```
+
+## 🛠 ETL Core System Operations
+
+*   **Ingestion Vector**: Abstracted file mapping inside `extractor.py` utilizing existence parameters and explicit structural `try-except` boundary captures.
+*   **Data Recovery Matrix**: Automatic missing number correction, unparseable timestamp truncation, and domain filter blocks inside `transformer.py`.
+*   **Aggregations Engine**: Calculations covering daily transaction velocity metrics, currency channel distribution, and fraud risk monitoring triggers.
