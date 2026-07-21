@@ -1,11 +1,12 @@
 import os
 from datetime import datetime
 
-# Path Routing Configurations
+# Absolute Path Routing Maps
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW_DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
 PROCESSED_DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
-OUTPUT_DIR = os.path.join(BASE_DIR, "data", "output")
+OUTPUT_DIR = os.path.join(BASE_DIR, "data", "reports") # Updated to map your reports layout!
+
 
 # Engine Parameter Configurations
 NUMBER_OF_TRANSACTIONS: int = 1000

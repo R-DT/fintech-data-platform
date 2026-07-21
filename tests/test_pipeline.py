@@ -3,8 +3,7 @@ import os
 import pytest
 import pandas as pd
 
-# Ensure the test runner can locate the src modules cleanly
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Clear the relative path append lines and import natively
 from src.transformer import TransactionTransformer
 
 def test_transformer_cleans_null_amounts():
