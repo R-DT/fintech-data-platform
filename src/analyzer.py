@@ -1,27 +1,29 @@
 import logging
 import pandas as pd
+from src.config import Settings
 
 logger = logging.getLogger(__name__)
 
 class TransactionAnalyzer:
-    """Executes financial aggregation matrix calculations on cleaned ledgers."""
+    """Calculates financial aggregation performance metrics."""
+
+    def __init__(self, settings: Settings) -> None:
+        self.settings = settings
 
     def calculate_metrics(self, df: pd.DataFrame) -> dict:
-        """Computes core business KPIs across the transaction batch."""
-        logger.info("Analytics Phase: Commencing aggregation metrics calculation...")
+        logger.info("Analytics Phase: Calculating core metrics profile...")
         
         if df.empty:
-            logger.warning("Analytics Phase: Cleaned dataframe is empty. Returning blank metrics.")
+            logger.warning("Analytics Phase: Dataset is empty.")
             return {}
 
         metrics = {
             "total_transaction_count": int(len(df)),
-            "total_volume_usd_equiv": float(df["Amount"].sum()),
-            "average_transaction_value": float(df["Amount"].mean()),
-            "status_distribution": df["Status"].value_value_counts().to_dict() if hasattr(df["Status"], "value_value_counts") else df["Status"].value_counts().to_dict(),
-            "channel_velocity": df["Channel"].value_counts().to_dict(),
-            "highest_value_alerts": df[df["Amount"] > 1200][["TransactionID", "CustomerID", "Amount"]].to_dict(orient="records")
+            "total_volume": float(df["Amount"].sum()),
+            "average_value": float(df["Amount"].mean()),
+            "status_breakdown": df["Status"].value_counts().to_dict(),
+            "channel_volume": df["Channel"].value_counts().to_dict()
         }
 
-        logger.info("Analytics Phase: Aggregations calculated successfully.")
+        logger.info("Analytics Phase: Metrics calculation completed.")
         return metrics

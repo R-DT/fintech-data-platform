@@ -1,47 +1,49 @@
-import logging
 import sys
+from src.config import Settings
+from src.logger import setup_logger
 from src.generator import TransactionGenerator
 from src.extractor import TransactionExtractor
+from src.validator import TransactionValidator
 from src.transformer import TransactionTransformer
 from src.analyzer import TransactionAnalyzer
-from src.loader import TransactionLoader
+from src.loader import FileLoader
 
-
-
-# Configure standard production-level global tracking format
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-logger = logging.getLogger("pipeline_orchestrator")
+logger = setup_logger("pipeline_orchestrator")
 
 def run_platform_pipeline():
-    logger.info("=== STARTING FINTECH DATA PLATFORM PIPELINE ===")
+    logger.info("=== STARTING REFACTORED FINTECH DATA PLATFORM PIPELINE ===")
     
     try:
-        # 1. Initialize components
-        generator = TransactionGenerator()
-        extractor = TransactionExtractor()
-        transformer = TransactionTransformer()
-        analyzer = TransactionAnalyzer()
-        loader = TransactionLoader()
+        # 1. Centralized Configuration Initialization
+        settings = Settings()
 
-        # 2. Run execution sequence
-        raw_path = generator.generate()
-        raw_data = extractor.extract()
-        cleaned_data = transformer.clean(raw_data)
+        # 2. Dependency Injection Lifecycle Initialization
+        generator = TransactionGenerator(settings)
+        extractor = TransactionExtractor(settings)
+        validator = TransactionValidator(settings)
+        transformer = TransactionTransformer(settings)
+        analyzer = TransactionAnalyzer(settings)
+        loader = FileLoader(settings)
+
+        # 3. Synchronous Pipeline Execution Lifecycle Trace
+        generator.generate_transactions()
+        raw_data = extractor.extract_transactions()
+        
+        # Isolated Audit Validation Step
+        validation_report = validator.validate_transactions(raw_data)
+        
+        # Clean and aggregate
+        cleaned_data = transformer.clean_transactions(raw_data, validation_report)
         metrics = analyzer.calculate_metrics(cleaned_data)
         
-        loader.save_processed_data(cleaned_data)
-        loader.save_analytics_report(metrics)
+        # Output persistence
+        loader.save_data(cleaned_data)
+        loader.save_report(metrics)
         
         logger.info("=== PIPELINE RUN COMPLETE: SUCCESS ===")
 
     except Exception as e:
-        logger.critical(f"Pipeline crashed during execution lifecycle: {str(e)}", exc_info=True)
+        logger.critical(f"Pipeline crashed during execution: {str(e)}", exc_info=True)
         sys.exit(1)
 
 if __name__ == "__main__":
