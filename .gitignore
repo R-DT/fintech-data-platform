@@ -1,4 +1,23 @@
+# Virtual Environment
 .venv/
+venv/
+ENV/
 
+# Editor Settings
+.vscode/
+
+# Testing Cache
+.pytest_cache/
+.cache/
+
+# Python Cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Local Data Storage (Keep raw/processed files out of Git)
+data/raw/*
+data/processed/*
+data/reports/*
+!data/**/.gitkeep
