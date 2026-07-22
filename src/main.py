@@ -68,6 +68,7 @@ def run_platform_pipeline() -> None:
         
         # Persist data assets safely to both file storage and SQL database layers
         loader.save_to_csv(cleaned_data)
+        loader.save_to_parquet(cleaned_data)
         loader.save_json_report(metrics)
         loader.load_to_postgres(cleaned_data)
         

@@ -27,6 +27,15 @@ class FileLoader:
         logger.info(f"Load Phase: Business report saved to JSON -> {destination}")
         return str(destination)
 
+    def save_to_parquet(self, df: pd.DataFrame, target_name: str = "cleaned_ledger.parquet") -> str:
+        """Saves the cleaned dataset into compressed, high-performance columnar Parquet files."""
+        destination: Path = self.settings.PROCESSED_DATA_DIR / target_name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        # Write to disk using the pyarrow columnar compression backend engine
+        df.to_parquet(destination, index=False, engine="pyarrow", compression="snappy")
+        logger.info(f"Load Phase: Clean transactions saved to Parquet data lake -> {destination}")
+        return str(destination)
 
 class DatabaseLoader(FileLoader):
     def __init__(self, settings: Settings, db_connector: DatabaseConnector) -> None:
