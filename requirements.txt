@@ -5,3 +5,4 @@ pytest-mock==3.14.0
 SQLAlchemy==2.0.51
 psycopg2-binary==2.9.12
 pyarrow==16.1.0
+pyspark==3.5.1
