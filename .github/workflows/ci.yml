@@ -9,7 +9,7 @@ on:
 jobs:
   test_suite:
     runs-on: ubuntu-latest
-    
+
     services:
       # Automatically spin up an isolated test database container for the runner environment
       postgres_test:
