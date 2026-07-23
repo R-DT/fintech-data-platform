@@ -29,10 +29,10 @@ jobs:
 
     steps:
     - name: Checkout Code Repository Tracks
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Initialize Stable Python Environment
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         cache: 'pip'
