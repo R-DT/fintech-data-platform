@@ -1,7 +1,9 @@
 import os
 import unittest
 from unittest.mock import MagicMock, patch
+
 import pandas as pd
+
 from src.analytics.spark import process_fintech_data
 
 
