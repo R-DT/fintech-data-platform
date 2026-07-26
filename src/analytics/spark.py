@@ -33,7 +33,7 @@ def process_fintech_data(input_path: str, output_path: str) -> None:
                 f"Hadoop storage path permissions blocked native write. Triggering memory fallback: {write_err!s}"
             )
             local_data = transformed_df.toPandas()
-            local_data.to_parquet(output_path, partition_cols=["currency"])
+            local_data.to_parquet(output_path, partition_cols=["currency"])  # type: ignore[attr-defined]
             logger.info("Local pandas driver fallback writing executed successfully.")
 
     except Exception:
