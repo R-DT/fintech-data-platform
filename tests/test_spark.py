@@ -6,19 +6,17 @@ from src.analytics.spark import process_fintech_data
 
 
 class TestSparkPipelineFallback(unittest.TestCase):
-
     def setUp(self):
         """Set up test file paths and mock data framework."""
         self.input_path = "tests/fixtures/mock_input.parquet"
         self.output_path = "tests/fixtures/mock_output"
-        
+
         if not os.path.exists("tests/fixtures"):
             os.makedirs("tests/fixtures")
 
-        df = pd.DataFrame({
-            "amount": [100.50, -50.00, 20.00],
-            "currency": ["USD", "EUR", "USD"]
-        })
+        df = pd.DataFrame(
+            {"amount": [100.50, -50.00, 20.00], "currency": ["USD", "EUR", "USD"]}
+        )
         df.to_parquet(self.input_path)
 
     def tearDown(self):
@@ -27,6 +25,7 @@ class TestSparkPipelineFallback(unittest.TestCase):
             if os.path.exists(path):
                 if os.path.isdir(path):
                     import shutil
+
                     shutil.rmtree(path)
                 else:
                     os.remove(path)
@@ -36,32 +35,33 @@ class TestSparkPipelineFallback(unittest.TestCase):
         """Verify that a native write failure drops processing down to Pandas fallback."""
         mock_spark = MagicMock()
         mock_spark_session.builder.appName.return_value.master.return_value.getOrCreate.return_value = mock_spark
-        
+
         mock_df = MagicMock()
         mock_spark.read.parquet.return_value = mock_df
-        
+
         # FIX: Mock the data column extraction and operator comparison
         mock_column = MagicMock()
         mock_df.__getitem__.return_value = mock_column
-        mock_column.__gt__.return_value = MagicMock()  # Simulates df["amount"] > 0 expression
-        
+        mock_column.__gt__.return_value = (
+            MagicMock()
+        )  # Simulates df["amount"] > 0 expression
+
         mock_transformed_df = MagicMock()
         mock_df.filter.return_value = mock_transformed_df
-        
+
         mock_writer = MagicMock()
         mock_writer.partitionBy.return_value = mock_writer
         mock_writer.parquet.side_effect = Exception("Mock Hadoop write error")
         mock_transformed_df.write.mode.return_value = mock_writer
-        
-        fallback_pandas_df = pd.DataFrame({
-            "amount": [100.50, 20.00],
-            "currency": ["USD", "USD"]
-        })
+
+        fallback_pandas_df = pd.DataFrame(
+            {"amount": [100.50, 20.00], "currency": ["USD", "USD"]}
+        )
         mock_transformed_df.toPandas.return_value = fallback_pandas_df
 
         with patch.object(pd.DataFrame, "to_parquet") as mock_pandas_to_parquet:
             process_fintech_data(self.input_path, self.output_path)
-            
+
             mock_transformed_df.toPandas.assert_called_once()
             mock_pandas_to_parquet.assert_called_once_with(
                 self.output_path, partition_cols=["currency"]
