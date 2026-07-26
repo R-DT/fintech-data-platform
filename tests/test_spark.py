@@ -40,6 +40,11 @@ class TestSparkPipelineFallback(unittest.TestCase):
         mock_df = MagicMock()
         mock_spark.read.parquet.return_value = mock_df
         
+        # FIX: Mock the data column extraction and operator comparison
+        mock_column = MagicMock()
+        mock_df.__getitem__.return_value = mock_column
+        mock_column.__gt__.return_value = MagicMock()  # Simulates df["amount"] > 0 expression
+        
         mock_transformed_df = MagicMock()
         mock_df.filter.return_value = mock_transformed_df
         
