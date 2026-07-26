@@ -1,9 +1,12 @@
 import logging
 from pathlib import Path
+
 import pandas as pd
+
 from src.config import Settings
 
 logger = logging.getLogger(__name__)
+
 
 class TransactionExtractor:
     """Handles raw data ingestion from local storage volumes."""
@@ -24,6 +27,6 @@ class TransactionExtractor:
             df = pd.read_csv(source_path)
             logger.info(f"Extract Phase: Ingested {len(df)} records.")
             return df
-        except Exception as e:
+        except Exception:
             logger.exception("Extract Phase: Failed to parse raw CSV data stream.")
-            raise e
+            raise

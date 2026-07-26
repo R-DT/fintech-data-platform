@@ -1,9 +1,10 @@
-import logging
 import pandas as pd
+
 from src.config import Settings
 from src.logger import setup_logger
 
 logger = setup_logger(__name__)
+
 
 class TransactionValidator:
     """Handles strict data schema quality audits and integrity validations."""
@@ -20,7 +21,7 @@ class TransactionValidator:
             return {
                 "null_amounts": pd.Series(dtype=bool),
                 "invalid_dates": pd.Series(dtype=bool),
-                "invalid_currencies": pd.Series(dtype=bool)
+                "invalid_currencies": pd.Series(dtype=bool),
             }
 
         # 1. Audit Rule: Identify missing transaction amounts
@@ -44,5 +45,5 @@ class TransactionValidator:
         return {
             "null_amounts": null_amounts,
             "invalid_dates": invalid_dates,
-            "invalid_currencies": invalid_currencies
+            "invalid_currencies": invalid_currencies,
         }
