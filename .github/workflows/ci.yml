@@ -41,14 +41,14 @@ jobs:
         pip install -r requirements.txt
         pip install -e .
 
-    - name: Execute Static Linting & Code Style Gates
+    - name: Execute Strict Static Linting & Code Style Gates
       run: |
-        python -m ruff check . --fix || true
-        python -m black --check .
+        python -m ruff format . --check
+        python -m ruff check .
 
     - name: Execute Strict Type Checking Gates
       run: |
-        python -m mypy src --ignore-missing-imports || true
+        python -m mypy src --ignore-missing-imports
 
     - name: Execute Automated Validation Suites
       env:
