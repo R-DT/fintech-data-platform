@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      # Automatically spin up an isolated test database container for the runner environment
       postgres_test:
         image: postgres:16-alpine
         env:
@@ -20,7 +19,6 @@ jobs:
           POSTGRES_DB: fintech_db
         ports:
           - 5432:5432
-        # Wait until PostgreSQL is alive before launching script checks
         options: >-
           --health-cmd "pg_isready -U postgres -d fintech_db"
           --health-interval 5s
@@ -47,7 +45,7 @@ jobs:
       env:
         DB_USER: postgres
         DB_PASS: postgres
-        DB_HOST: localhost
+        DB_HOST: 127.0.0.1
         DB_PORT: 5432
         DB_NAME: fintech_db
       run: |

@@ -2,7 +2,7 @@
 
 ![CI Pipeline](https://github.com)
 
-A modular, Python-based data engineering project that simulates a fintech transaction platform. 
+A modular, Python-based data engineering project that simulates a fintech transaction platform.
 
 This platform serves as a production-ready portfolio asset demonstrating modern data architecture, clean code principles, and end-to-end data pipelines.
 
