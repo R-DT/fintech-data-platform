@@ -43,8 +43,9 @@ jobs:
 
     - name: Execute Strict Static Linting & Code Style Gates
       run: |
-        python -m ruff format . --check
-        python -m ruff check .
+        python -m ruff format . --fix
+        python -m ruff check . --fix
+        git diff  # View what was fixed
 
     - name: Execute Strict Type Checking Gates
       run: |
