@@ -1,10 +1,12 @@
 from enum import Enum
 from pathlib import Path
 
+
 class TransactionStatus(str, Enum):
     SUCCESSFUL = "Successful"
     FAILED = "Failed"
     PENDING = "Pending"
+
 
 class PaymentChannel(str, Enum):
     MOBILE_APP = "Mobile App"
@@ -13,15 +15,17 @@ class PaymentChannel(str, Enum):
     ATM = "ATM"
     USSD = "USSD"
 
+
 class TransactionType(str, Enum):
     DEPOSIT = "Deposit"
     WITHDRAWAL = "Withdrawal"
     TRANSFER = "Transfer"
     BILL_PAYMENT = "Bill Payment"
 
+
 class Settings:
     """Centralized configuration manager for platform parameters and directory paths."""
-    
+
     def __init__(self) -> None:
         # Path Routing Maps via Pathlib
         self.BASE_DIR: Path = Path(__file__).resolve().parent.parent
@@ -29,7 +33,7 @@ class Settings:
         self.PROCESSED_DATA_DIR: Path = self.BASE_DIR / "data" / "processed"
         self.REPORTS_DIR: Path = self.BASE_DIR / "data" / "reports"
 
-        #Tracking the .env file path for environment variables
+        # Tracking the .env file path for environment variables
         self.ENV_FILE_PATH: Path = self.BASE_DIR / ".env"
 
         # Engine Control Parameters
@@ -46,11 +50,9 @@ class Settings:
             TransactionStatus.SUCCESSFUL.value,
             TransactionStatus.SUCCESSFUL.value,
             TransactionStatus.FAILED.value,
-            TransactionStatus.PENDING.value
+            TransactionStatus.PENDING.value,
         ]
         # AWS Cloud Data Lake Infrastructure Targets
         self.AWS_S3_BUCKET_NAME: str = "fintech-data-platform-lake"
         self.AWS_S3_RAW_KEY: str = "raw/transactions.csv"
         self.AWS_S3_PROCESSED_KEY: str = "processed/cleaned_ledger.parquet"
-
-    
