@@ -8,7 +8,7 @@ from src.analyzer import TransactionAnalyzer
 from src.config import Settings
 from src.database import DatabaseConnector
 from src.extractor import TransactionExtractor
-from src.generator import TransactionGenerator
+from src.generator import NormalizedDataGenerator
 from src.loader import DatabaseLoader
 from src.logger import setup_logger
 from src.repository import TransactionRepository
@@ -55,14 +55,13 @@ def run_platform_pipeline() -> None:
             )
             sys.exit(1)
 
-        # Defensive Programming: Pre-bind variable scopes to clear unbound warnings
-        raw_data = pd.DataFrame()
+        # Defensive Programming: Pre-bind variables to clear unbound warnings
         cleaned_data = pd.DataFrame()
         metrics: dict = {}
 
         # Dependency Injection Lifecycle Architecture
-        generator = TransactionGenerator(settings)
-        extractor = TransactionExtractor(settings)
+        generator = NormalizedDataGenerator()
+        TransactionExtractor(settings)
         validator = TransactionValidator(settings)
         transformer = TransactionTransformer(settings)
         analyzer = TransactionAnalyzer(settings)
@@ -71,9 +70,13 @@ def run_platform_pipeline() -> None:
         repository = TransactionRepository(db_connector)
         loader = DatabaseLoader(settings, repository)
 
-        # Operational ETL pipeline run sequence
-        generator.generate_transactions()
-        raw_data = extractor.extract_transactions()
+        # Operational ETL pipeline run sequence matching the normalized tables
+        dataset = generator.generate_batch_dataset(
+            customer_count=50, merchant_count=10, transaction_count=1000
+        )
+
+        # Load the generated core transactions component into a DataFrame for downstream processing
+        raw_data = pd.DataFrame(dataset["transactions"])
 
         validation_report = validator.validate_transactions(raw_data)
         cleaned_data = transformer.clean_transactions(raw_data, validation_report)
