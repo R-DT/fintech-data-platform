@@ -1,66 +1,88 @@
-import logging
+import random
+import uuid
 from datetime import datetime, timedelta, timezone
-
-import numpy as np
-import pandas as pd
-
-from src.config import Settings
-
-logger = logging.getLogger(__name__)
+from typing import Any, Dict, List
 
 
-class TransactionGenerator:
-    """Generates synthetic transactions for pipeline data pipeline testing."""
+class NormalizedDataGenerator:
+    """Generates synthetic, highly correlated relational fintech datasets."""
 
-    def __init__(self, settings: Settings) -> None:
-        # Dependency Injection of Platform Settings
-        self.settings = settings
-        self.rng = np.random.default_rng(settings.RANDOM_SEED)
-
-    def generate_transactions(self, filename: str = "raw_ledger.csv") -> str:
-        count = self.settings.NUMBER_OF_TRANSACTIONS
-        logger.info(f"Generating {count} mock transactions...")
-
-        start_date = datetime.strptime(
-            self.settings.START_DATE_STR, "%Y-%m-%d"
-        ).replace(tzinfo=timezone.utc)
-
-        data = {
-            "TransactionID": [f"TXN{str(i).zfill(6)}" for i in range(1, count + 1)],
-            "CustomerID": [
-                f"CUST{self.rng.integers(100, 150)!s}" for _ in range(count)
-            ],
-            "TransactionType": self.rng.choice(self.settings.TYPES, size=count),
-            "Amount": np.round(self.rng.uniform(5.0, 1500.0, size=count), 2),
-            "Currency": self.rng.choice(
-                self.settings.SUPPORTED_CURRENCIES, size=count, p=[0.8, 0.1, 0.1]
-            ),
-            "Channel": self.rng.choice(self.settings.CHANNELS, size=count),
-            "Date": [
-                (
-                    start_date
-                    + timedelta(
-                        days=int(self.rng.integers(0, 180)),
-                        hours=int(self.rng.integers(0, 24)),
-                    )
-                ).strftime("%Y-%m-%d %H:%M:%S")
-                for _ in range(count)
-            ],
-            "Status": self.rng.choice(self.settings.STATUS_POOL, size=count),
+    def __init__(self) -> None:
+        self.currencies = ["USD", "EUR", "GBP", "CAD", "AUD"]
+        self.account_types = ["CHECKING", "SAVINGS", "CREDIT"]
+        self.merchant_categories = {
+            "Walmart": "GROCERY",
+            "Amazon": "RETAIL",
+            "Netflix": "ENTERTAINMENT",
+            "Exxon": "GAS_STATION",
+            "Starbucks": "RESTAURANT",
         }
 
-        df = pd.DataFrame(data)
+    def generate_batch_dataset(
+        self, customer_count: int, merchant_count: int, transaction_count: int
+    ) -> Dict[str, List[Dict[str, Any]]]:
+        """Generates cross-linked dictionary datasets for relational loading."""
+        
+        # 1. Generate Static Customers
+        customers: List[Dict[str, Any]] = []
+        for i in range(customer_count):
+            c_id = uuid.uuid4()
+            customers.append({
+                "customer_id": c_id,
+                "first_name": f"User_{i}",
+                "last_name": f"Surname_{i}",
+                "email": f"user_{i}_{uuid.uuid4().hex[:6]}@fintechplatform.io",
+                "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(30, 365))
+            })
 
-        # Inject anomalies for validation and transformation checks
-        df.loc[self.rng.choice(df.index, size=15, replace=False), "Amount"] = np.nan
-        df.loc[self.rng.choice(df.index, size=10, replace=False), "Date"] = (
-            "CORRUPT_DATETIME_STRING"
-        )
+        # 2. Generate Accounts Linked to Customers
+        accounts: List[Dict[str, Any]] = []
+        for customer in customers:
+            # Assign 1 to 2 accounts per customer
+            for _ in range(random.randint(1, 2)):
+                accounts.append({
+                    "account_id": uuid.uuid4(),
+                    "customer_id": customer["customer_id"],
+                    "account_number": f"IBAN{random.randint(1000000000000000, 9999999999999999)}",
+                    "account_type": random.choice(self.account_types),
+                    "balance": round(random.uniform(500.00, 25000.00), 2),
+                    "currency": random.choice(self.currencies),
+                    "created_at": customer["created_at"] + timedelta(days=random.randint(1, 10))
+                })
 
-        output_path = self.settings.RAW_DATA_DIR / filename
-        # Ensure parent folder exists automatically via pathlib
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+        # 3. Generate Static Merchants
+        merchants: List[Dict[str, Any]] = []
+        merchant_names = list(self.merchant_categories.keys())
+        for i in range(merchant_count):
+            name = merchant_names[i % len(merchant_names)]
+            merchants.append({
+                "merchant_id": uuid.uuid4(),
+                "name": f"{name} #{random.randint(100, 999)}",
+                "category": self.merchant_categories[name],
+                "created_at": datetime.now(timezone.utc) - timedelta(days=365)
+            })
 
-        df.to_csv(output_path, index=False)
-        logger.info(f"Raw transactions written to: {output_path}")
-        return str(output_path)
+        # 4. Generate Core Transactions Linking Accounts & Merchants
+        transactions: List[Dict[str, Any]] = []
+        start_time = datetime.now(timezone.utc) - timedelta(days=14)
+
+        for _ in range(transaction_count):
+            account = random.choice(accounts)
+            merchant = random.choice(merchants)
+            
+            transactions.append({
+                "transaction_id": uuid.uuid4(),
+                "account_id": account["account_id"],
+                "merchant_id": merchant["merchant_id"],
+                "amount": round(random.uniform(5.00, 1200.00), 2),
+                "currency": account["currency"],  # Enforce transaction matches account ledger currency
+                "status": random.choice(["COMPLETED", "COMPLETED", "COMPLETED", "PENDING", "DECLINED"]),
+                "timestamp": start_time + timedelta(seconds=random.randint(0, 1209600))
+            })
+
+        return {
+            "customers": customers,
+            "accounts": accounts,
+            "merchants": merchants,
+            "transactions": transactions
+        }
