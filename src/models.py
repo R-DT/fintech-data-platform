@@ -11,7 +11,6 @@ class Base(DeclarativeBase):
     """Abstract base definition layer for platform schema components."""
 
 
-
 class Customer(Base):
     __tablename__ = "customers"
 
