@@ -66,7 +66,7 @@ class DatabaseBenchmarkSuite:
 
             # Calculate engineering metrics delta
             factor = pandas_duration / sql_duration if sql_duration > 0 else 0
-            logger.info(f"PostgreSQL outperformed Pandas by a factor of {factor:.2x}x")
+            logger.info(f"PostgreSQL outperformed Pandas by a factor of {factor:.2f}x")
 
             # Save out a clean markdown documentation ledger report asset
             self._write_markdown_report(sql_duration, pandas_duration, factor)
