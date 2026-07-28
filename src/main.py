@@ -11,6 +11,7 @@ from src.database import DatabaseConnector
 from src.generator import NormalizedDataGenerator
 from src.loader import DatabaseLoader
 from src.logger import setup_logger
+from src.models import Base
 from src.repository import TransactionRepository
 from src.transformer import TransactionTransformer
 from src.validator import TransactionValidator
@@ -54,6 +55,12 @@ def run_platform_pipeline() -> None:
                 "Pipeline execution aborted: Database target is unreachable."
             )
             sys.exit(1)
+
+        # FIX: Hardened Programmatic Auto-Creation Gate
+        # Unpacks the session context and maps missing schemas straight into Postgres
+        with db_connector.get_session() as session:
+            Base.metadata.create_all(bind=session.connection().engine)
+            logger.info("Database Schema Synchronization: Verification check complete.")
 
         # Defensive Programming: Pre-bind variables to clear unbound warnings
         cleaned_data = pd.DataFrame()
