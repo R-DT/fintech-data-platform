@@ -57,7 +57,7 @@ class BulkDataIngestionEngine:
                 )
                 return True
 
-        except Exception as err: #  noqa: BLE001
+        except Exception as err:  #  noqa: BLE001
             # Catch failures, trigger rollbacks, and isolate corruptions
             logger.error(
                 f"Critical failure during bulk processing boundary. Transaction rolled back safely: {err!s}"
