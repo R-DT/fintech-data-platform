@@ -25,14 +25,14 @@ class TransactionValidator:
             }
 
         # 1. Audit Rule: Identify missing transaction amounts
-        null_amounts = df["Amount"].isnull()
+        null_amounts = df["amount"].isnull()
 
-        # 2. Audit Rule: Identify unparseable datetime formats
-        parsed_dates = pd.to_datetime(df["Date"], errors="coerce")
+        # 2. Audit Rule: Identify unparseable datetime formats (Updated to lowercase 'timestamp')
+        parsed_dates = pd.to_datetime(df["timestamp"], errors="coerce")
         invalid_dates = parsed_dates.isnull()
 
         # 3. Audit Rule: Identify unsupported business currencies
-        invalid_currencies = ~df["Currency"].isin(self.settings.SUPPORTED_CURRENCIES)
+        invalid_currencies = ~df["currency"].isin(self.settings.SUPPORTED_CURRENCIES)
 
         # Generate diagnostic error logs for monitoring tools
         logger.info(
