@@ -44,7 +44,7 @@ try:
             db_url = app_settings.database_url
         elif hasattr(app_settings, "DB_CONN_STR"):
             db_url = app_settings.DB_CONN_STR
-except Exception:  # noqa: BLE001
+except Exception:  # noqa: BLE001, S110
     pass
 
 # Hardened Local Fallback: If no string resolves, target your active local Docker container
