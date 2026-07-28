@@ -16,7 +16,7 @@ def test_transformer_cleans_null_amounts(settings):
     validator = TransactionValidator(settings)
     transformer = TransactionTransformer(settings)
 
-    # FIX: Shift mock dataframe schema columns to match lowercase database properties
+    # Shift mock dataframe schema columns to match lowercase database properties
     dirty_data = pd.DataFrame(
         {
             "transaction_id": ["TXN001"],
@@ -33,6 +33,7 @@ def test_transformer_cleans_null_amounts(settings):
     report = validator.validate_transactions(dirty_data)
     clean_data = transformer.clean_transactions(dirty_data, report)
 
+    # FIX: Deploy index pointer references to fetch explicit item positions
     assert clean_data["amount"].iloc[0] == 0.0
     assert len(clean_data) == 1
 
@@ -40,7 +41,7 @@ def test_transformer_cleans_null_amounts(settings):
 def test_validator_flags_unsupported_currencies(settings):
     validator = TransactionValidator(settings)
 
-    # FIX: Shift mock dataframe schema columns to match lowercase database properties
+    # Shift mock dataframe schema columns to match lowercase database properties
     invalid_data = pd.DataFrame(
         {
             "transaction_id": ["TXN002"],
@@ -55,4 +56,5 @@ def test_validator_flags_unsupported_currencies(settings):
     )
 
     report = validator.validate_transactions(invalid_data)
+    # FIX: Deploy index pointer references to fetch explicit item positions
     assert report["invalid_currencies"].iloc[0] == True
