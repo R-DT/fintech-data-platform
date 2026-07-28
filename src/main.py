@@ -5,9 +5,9 @@ import pandas as pd
 import pytest
 
 from src.analyzer import TransactionAnalyzer
+from src.bulk_loader import BulkDataIngestionEngine
 from src.config import Settings
 from src.database import DatabaseConnector
-from src.extractor import TransactionExtractor
 from src.generator import NormalizedDataGenerator
 from src.loader import DatabaseLoader
 from src.logger import setup_logger
@@ -61,10 +61,10 @@ def run_platform_pipeline() -> None:
 
         # Dependency Injection Lifecycle Architecture
         generator = NormalizedDataGenerator()
-        TransactionExtractor(settings)
         validator = TransactionValidator(settings)
         transformer = TransactionTransformer(settings)
         analyzer = TransactionAnalyzer(settings)
+        bulk_loader = BulkDataIngestionEngine(db_connector)
 
         # Instantiate your repository and inject it straight into your loader
         repository = TransactionRepository(db_connector)
@@ -75,6 +75,13 @@ def run_platform_pipeline() -> None:
             customer_count=50, merchant_count=10, transaction_count=1000
         )
 
+        # 3. High-Throughput Bulk Relational Database Loading Ingest Track
+        bulk_success = bulk_loader.ingest_batch_dataset(dataset)
+        if not bulk_success:
+            logger.error(
+                "Bulk ingestion sequence encountered isolated processing rollback."
+            )
+
         # Load the generated core transactions component into a DataFrame for downstream processing
         raw_data = pd.DataFrame(dataset["transactions"])
 
@@ -82,11 +89,10 @@ def run_platform_pipeline() -> None:
         cleaned_data = transformer.clean_transactions(raw_data, validation_report)
         metrics = analyzer.calculate_metrics(cleaned_data)
 
-        # Persist data assets safely to file storage, SQL, and AWS cloud layers
+        # Persist data assets safely to file storage and AWS cloud layers
         loader.save_to_csv(cleaned_data)
         parquet_path = loader.save_to_parquet(cleaned_data)
         loader.save_json_report(metrics)
-        loader.load_to_postgres(cleaned_data)
 
         # Stream your compressed Parquet snapshot into your AWS S3 Cloud Lake target
         loader.upload_to_s3(parquet_path, settings.AWS_S3_PROCESSED_KEY)
