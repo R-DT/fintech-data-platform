@@ -1,31 +1,74 @@
-# Virtual Environment
+# ==============================================================================
+# 🔐 Secrets and Environmental Configurations
+# ==============================================================================
+.env
+.env.local
+.env.*
+! .env.example
+
+# ==============================================================================
+# 🗄️ Local Data Lake Ingestion Storage and Artifacts
+# ==============================================================================
+data/
+docs/BENCHMARK_RESULTS.md
+*.csv
+*.parquet
+*.json
+!pyproject.toml
+!requirements.txt
+
+# ==============================================================================
+# 🐍 Python Runtimes and Virtual Environments
+# ==============================================================================
 .venv/
 venv/
 ENV/
-.env
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-
-# Editor Settings
-.vscode/
-
-# Testing Cache
+# ==============================================================================
+# 🧪 Test Frameworks, Linters, and Cache Engines
+# ==============================================================================
 .pytest_cache/
-.cache/
-
-# Python Cache
-__pycache__/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.tomlcov
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
 *.pyc
 *.pyo
 *.pyd
+__pycache__/
 
-# Local Data Storage (Keep raw/processed files out of Git)
-data/raw/*
-data/processed/*
-data/reports/*
-!data/**/.gitkeep
-
-# Python Packaging Metadata Cache
-*.egg-info/
-.eggs/
-build/
-dist/
+# ==============================================================================
+# 💻 IDE Panels and System Overrides
+# ==============================================================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+Thumbs.db
