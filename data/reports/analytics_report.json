@@ -1,17 +1,5 @@
 {
-    "total_transaction_count": 990,
-    "total_volume": 740709.28,
-    "average_value": 748.191191919192,
-    "status_breakdown": {
-        "Successful": 596,
-        "Failed": 208,
-        "Pending": 186
-    },
-    "channel_volume": {
-        "Mobile App": 231,
-        "Web Portal": 204,
-        "ATM": 191,
-        "POS Terminal": 189,
-        "USSD": 175
-    }
+    "total_volume": 250389.02,
+    "transaction_count": 445,
+    "average_transaction_value": 562.67
 }
