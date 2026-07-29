@@ -26,6 +26,13 @@ Apache Spark Analytics (Distributed Aggregations)
 Multiple Storage Formats (CSV, Columnar Parquet, JSON Reports)
 ```
 
+## 🛠️ Technology Stack
+
+- **Languages & Runtimes:** Python 3.12, Apache Spark, Apache Airflow
+- **Databases & ORM:** PostgreSQL, SQLAlchemy Core/ORM, Alembic Migrations
+- **Containerization & CI/CD:** Docker, Docker Compose, GitHub Actions
+- **Data Engineering Core:** Pandas, PyArrow, Automated Pytest Suite
+
 ## 📊 Current Status
 
 *   ✅ **Python ETL Pipeline** - Fully operational data extraction, cleaning, and metric calculations.
