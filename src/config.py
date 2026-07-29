@@ -1,58 +1,45 @@
-from enum import Enum
+import os
 from pathlib import Path
+from typing import Literal
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class TransactionStatus(str, Enum):
-    SUCCESSFUL = "Successful"
-    FAILED = "Failed"
-    PENDING = "Pending"
+class Settings(BaseSettings):
+    """Encapsulates production-grade multi-environment application configurations."""
 
+    # Environment Discriminator Execution Target
+    ENV: Literal["DEV", "TEST", "PROD"] = os.getenv("ENV", "DEV")  # type: ignore
 
-class PaymentChannel(str, Enum):
-    MOBILE_APP = "Mobile App"
-    WEB_PORTAL = "Web Portal"
-    POS_TERMINAL = "POS Terminal"
-    ATM = "ATM"
-    USSD = "USSD"
+    # Database Connection Management Matrices
+    DATABASE_URL: str = (
+        "postgresql+psycopg2://postgres:postgres@localhost:5432/fintech_db"
+    )
 
+    # Cloud Infrastructure Target Parameters
+    AWS_S3_BUCKET_NAME: str = "fintech-data-lake-bucket"
+    AWS_S3_PROCESSED_KEY: str = "processed/transactions.parquet"
 
-class TransactionType(str, Enum):
-    DEPOSIT = "Deposit"
-    WITHDRAWAL = "Withdrawal"
-    TRANSFER = "Transfer"
-    BILL_PAYMENT = "Bill Payment"
+    # Strict Validation Constraints
+    SUPPORTED_CURRENCIES: list[str] = ["USD", "EUR", "GBP", "NGN", "KES"]
 
+    # FIX: Restore base physical storage directory parameters for local data exports
+    RAW_DATA_DIR: Path = Path("data/raw")
+    PROCESSED_DATA_DIR: Path = Path("data/processed")
+    REPORTS_DIR: Path = Path("data/reports")
 
-class Settings:
-    """Centralized configuration manager for platform parameters and directory paths."""
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
 
-    def __init__(self) -> None:
-        # Path Routing Maps via Pathlib
-        self.BASE_DIR: Path = Path(__file__).resolve().parent.parent
-        self.RAW_DATA_DIR: Path = self.BASE_DIR / "data" / "raw"
-        self.PROCESSED_DATA_DIR: Path = self.BASE_DIR / "data" / "processed"
-        self.REPORTS_DIR: Path = self.BASE_DIR / "data" / "reports"
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
 
-        # Tracking the .env file path for environment variables
-        self.ENV_FILE_PATH: Path = self.BASE_DIR / ".env"
-
-        # Engine Control Parameters
-        self.NUMBER_OF_TRANSACTIONS: int = 1000
-        self.START_DATE_STR: str = "2026-01-01"
-        self.RANDOM_SEED: int = 42
-
-        # Domain Configuration Profiles
-        self.SUPPORTED_CURRENCIES: list[str] = ["NGN", "USD", "EUR"]
-        self.CHANNELS: list[str] = [c.value for c in PaymentChannel]
-        self.TYPES: list[str] = [t.value for t in TransactionType]
-        self.STATUS_POOL: list[str] = [
-            TransactionStatus.SUCCESSFUL.value,
-            TransactionStatus.SUCCESSFUL.value,
-            TransactionStatus.SUCCESSFUL.value,
-            TransactionStatus.FAILED.value,
-            TransactionStatus.PENDING.value,
-        ]
-        # AWS Cloud Data Lake Infrastructure Targets
-        self.AWS_S3_BUCKET_NAME: str = "fintech-data-platform-lake"
-        self.AWS_S3_RAW_KEY: str = "raw/transactions.csv"
-        self.AWS_S3_PROCESSED_KEY: str = "processed/cleaned_ledger.parquet"
+        # Dynamic runtime adjustments based on your selected target environment
+        if self.ENV == "TEST":
+            self.DATABASE_URL = "sqlite:///:memory:"
+        elif self.ENV == "PROD":
+            self.DATABASE_URL = os.getenv(
+                "DATABASE_URL",
+                "postgresql+psycopg2://admin:secure_prod_pass@prod-db-host:5432/fintech_analytics",
+            )
