@@ -9,7 +9,7 @@ logger = logging.getLogger("quality_tracker")
 class AdvancedDataQualityTracker:
     """Computes production-grade data quality metrics profiles across operational data lake frames."""
 
-    def __init__(self, currency_whitelist: list[str] = None) -> None:
+    def __init__(self, currency_whitelist: list[str] | None = None) -> None:
         self.currency_whitelist = currency_whitelist or [
             "USD",
             "EUR",

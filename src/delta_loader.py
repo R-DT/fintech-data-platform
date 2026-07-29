@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Sequence
 from typing import Any
 
 from sqlalchemy.dialects.postgresql import insert
@@ -26,8 +27,9 @@ class IdempotentDeltaIngestionEngine:
             )
             return max_timestamp
 
+    # FIX: Use Sequence[Dict[Any, Any]] to satisfy invariance constraints across dataframe record dictionary maps
     def upsert_transaction_delta_batch(
-        self, transaction_records: list[dict[str, Any]]
+        self, transaction_records: Sequence[dict[Any, Any]]
     ) -> bool:
         """Executes an idempotent Postgres ON CONFLICT UPSERT boundary scan loop."""
         if not transaction_records:
